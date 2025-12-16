@@ -5,6 +5,12 @@ project(testbed LANGUAGES C CXX)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${CMAKE_CURRENT_SOURCE_DIR}/../assets
+		${CMAKE_BINARY_DIR}/assets
+)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD_REQUIRED TRUE CXX_STANDARD 20)
 
 find_package(Vulkan REQUIRED)
@@ -34,7 +40,7 @@ if(GLSLC_FOUND)
 	macro(compile_shader SHADER_FILE)
 		set(SHADER_SOURCE ${CMAKE_SOURCE_DIR}/shaders/${SHADER_FILE})
 		set(SHADER_BINARY ${SHADER_FILE}.spv)
-		set(SHADER_BINARY_PATH ${CMAKE_SOURCE_DIR}/shaders/${SHADER_BINARY})
+		set(SHADER_BINARY_PATH ${CMAKE_BINARY_DIR}/shaders/${SHADER_BINARY})
 
 		add_custom_command(
 			OUTPUT ${SHADER_BINARY_PATH}
@@ -51,6 +57,7 @@ if(GLSLC_FOUND)
 
 	compile_shader(shader.vert)
 	compile_shader(shader.frag)
+	compile_shader(shadow.vert)
 
 	add_custom_target(shaders DEPENDS ${_SHADER_BINARIES})
 	add_dependencies(${PROJECT_NAME} shaders)
