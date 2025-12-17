@@ -19,13 +19,13 @@ if(GLSLC_FOUND)
 	macro(compile_shader SHADER_FILE)
 		set(SHADER_SOURCE ${CMAKE_SOURCE_DIR}/shaders/${SHADER_FILE})
 		set(SHADER_BINARY ${SHADER_FILE}.spv)
-		set(SHADER_BINARY_PATH ${CMAKE_SOURCE_DIR}/shaders/${SHADER_BINARY})
+		set(SHADER_BINARY_PATH ${CMAKE_BINARY_DIR}/shaders/${SHADER_BINARY})
 
 		add_custom_command(
-			OUTPUT ${SHADER_BINARY_PATH}
-			COMMAND glslc ${SHADER_SOURCE} -o ${SHADER_BINARY_PATH}
-			DEPENDS ${SHADER_SOURCE}
-			COMMENT "Compiling ${SHADER_FILE} shader"
+				OUTPUT ${SHADER_BINARY_PATH}
+				COMMAND glslc ${SHADER_SOURCE} -o ${SHADER_BINARY_PATH}
+				DEPENDS ${SHADER_SOURCE}
+				COMMENT "Compiling ${SHADER_FILE} shader"
 		)
 
 		list(APPEND _SHADER_BINARIES ${SHADER_BINARY_PATH})
@@ -34,8 +34,8 @@ if(GLSLC_FOUND)
 	# To compile shader file, use compile_shader function with a file name
 	# of a shader inside shaders directory. See example below
 
-	# compile_shader(shader.vert)
-	# compile_shader(shader.frag)
+	compile_shader(shader.vert)
+	compile_shader(shader.frag)
 
 	add_custom_target(shaders DEPENDS ${_SHADER_BINARIES})
 	add_dependencies(${PROJECT_NAME} shaders)
